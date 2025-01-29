@@ -14,6 +14,7 @@ class Usuario(AbstractUser):
     class Meta:
         verbose_name = "Usuario"
         verbose_name_plural = "Usuarios"
+
 class Marca(models.Model):
     nombre = models.CharField(max_length=30, unique=True)
 
@@ -24,7 +25,7 @@ class Marca(models.Model):
         verbose_name = "Marca"
         verbose_name_plural = "Marcas" 
 class Producto(models.Model):
-    nombre = models.CharField(max_length=50, unique=True)
+    nombre = models.CharField(max_length=50)
     marca = models.ForeignKey("Marca", on_delete=models.CASCADE)
     modelo = models.CharField(max_length=50)
     unidades = models.IntegerField()
@@ -38,9 +39,23 @@ class Producto(models.Model):
     class Meta:
         verbose_name = "Producto"
         verbose_name_plural = "Productos"
-    
+        unique_together = ['nombre','marca']
 
-        
+class Compra(models.Model):
+    usuario = models.ForeignKey(Usuario,on_delete=models.CASCADE)
+    producto = models.ForeignKey(Producto,on_delete=models.CASCADE)
+    unidades = models.PositiveIntegerField()
+    fecha = models.DateTimeField(auto_now_add=True)
+    importe = models.IntegerField()
+    iva = models.DecimalField(default=0.21, decimal_places=2, max_digits=2)
+
+    def __str__(self):
+        return f'{self.usuario} - {self.fecha}'
+    
+    class Meta:
+        verbose_name = "Compra"
+        verbose_name_plural = "Compras"
+        unique_together = ['usuario','producto','fecha']
 
 
 

@@ -1,0 +1,19 @@
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+    {{object.nombre}}
+
+    <p>Detalles</p>
+    <img src="{{object.foto.url}}" alt="" width="300px">
+    
+    <p>-----------------------------------------------</p>
+    Marca: {{object.marca}}<br>
+    Modelo: {{object.modelo}}<br>
+    Precio: {{object.precio}}<br>
+    ¿VIP? {{object.vip}}<br>
+    {{object.foto}}<br>
+    Unidades: {{object.unidades}}<br>
+    <p>----------------------------------------------</p>
+    <a href="{% url 'producto_editar' pk=object.pk %}">Editar</a>
+    <a href="{% url 'producto_borrar' pk=object.pk %}">Borrar</a>
+{% endblock %}

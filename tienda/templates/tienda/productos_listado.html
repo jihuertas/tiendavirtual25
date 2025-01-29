@@ -1,0 +1,14 @@
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+    <ul>
+        {% for producto in object_list %}
+            <li>
+                <a href=  "{% url 'producto_detalle' producto.pk %}" >{{producto.nombre}}</a>
+
+            </li>
+        {% empty %}
+        <p>No hay productos</p>
+        {% endfor %}
+    </ul>
+{% endblock %}

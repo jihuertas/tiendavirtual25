@@ -6,10 +6,10 @@
         <input type="text" name="filtro_nombre" placeholder="Buscar por nombre" value = "{{request.GET.filtro_nombre}}"/>
         <select name="filtro_marca">
             <option value="">Seleccione una Marca</option>
-            {% for producto in productos %}
+            {% for marca in marcas %}
             <option 
-            {% if request.GET.filtro_marca == producto.marca.nombre %} selected {% endif %}>
-                {{producto.marca.nombre}}
+            {% if request.GET.filtro_marca == marca.nombre %} selected {% endif %}>
+                {{marca.nombre}}
             </option>
         {% empty %}
         <p>No hay marcas a seleccionar</p>
@@ -19,6 +19,7 @@
         <input type="number" name="filtro_precio" placeholder="Precio Máximo" value="{{request.GET.filtro_precio}}">
 
         <input type="submit" value="Filtrar">
+       
     </form>
     <ul>
         {% for producto in productos %}

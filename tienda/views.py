@@ -35,6 +35,13 @@ class ComprarProducto (ListView):
     template_name = 'tienda/compra_listado.html'
     context_object_name = 'productos'
     
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        marcas = Producto.objects # seguir aqui
+
+        contexto["marcas"] = marcas
+        return contexto
+
     def get_queryset(self):
 
         query = super().get_queryset()

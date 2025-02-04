@@ -24,8 +24,13 @@
     <ul>
         {% for producto in productos %}
             <li>
-                <a href=  "{% url 'producto_detalle' producto.pk %}" >{{producto.nombre}}</a>
+                <a href=  "{% url 'crear_compra' producto.pk %}" >{{producto.nombre}}</a>
+                <form action="" method="get">
+                    {% csrf_token %}
+                    {{ compra_form}}
+                    <input type="submit" value="Comprar">
 
+                </form>
             </li>
         {% empty %}
         <p>No hay productos</p>

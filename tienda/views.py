@@ -1,7 +1,8 @@
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render
 from .models import *
-from django.views.generic import ListView, DetailView, CreateView, UpdateView,DeleteView
+from django.views.generic import View, ListView, DetailView, CreateView, UpdateView,DeleteView
 from django.urls import reverse_lazy
+from .forms import CompraForm
 
 # Create your views here.
 
@@ -37,9 +38,12 @@ class ComprarProducto (ListView):
     
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
-        marcas = Producto.objects # seguir aqui
-
+        marcas = Marca.objects.filter(producto__isnull=False).distinct()
         contexto["marcas"] = marcas
+
+        form = CompraForm()
+        contexto['compra_form'] = form
+
         return contexto
 
     def get_queryset(self):
@@ -63,4 +67,23 @@ class ComprarProducto (ListView):
 
 
         return query
+    
+class Checkout(View):
+# seguir aquí
+
+
+
+class CrearCompra(CreateView):
+    model = Compra
+    template_name = 'tienda/compra_crear.html'
+    fields = ['unidades', 'usuario', 'importe', 'producto']
+    success_url = reverse_lazy('compra_listado')
+
+    def form_valid(self, form):
+        producto = get_object_or_404(Producto, pk=self.kwargs['pk'])
+        importe = 10
+        form.instance.producto = producto
+
+        print (producto)
+        return super().form_valid(form)
     

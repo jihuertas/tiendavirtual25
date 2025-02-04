@@ -10,6 +10,8 @@ from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
 from django.db.models import Sum, Count
+from django.contrib.auth.views import LoginView
+
 
 
 # Create your views here.
@@ -124,6 +126,10 @@ class RegistroView(CreateView):
     form_class = UsuarioCreationForm
     template_name = 'registration/registro.html'
     success_url = reverse_lazy('login')
+
+class CustomLoginView(LoginView):
+    authentication_form = CustomLoginForm
+    template_name = 'registration/login.html'
     
 @login_required
 def informes(request):

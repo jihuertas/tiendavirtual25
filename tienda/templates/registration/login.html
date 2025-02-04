@@ -44,12 +44,14 @@
             {% csrf_token%}
             <div class="mb-3">
                 
-                <label class="form-label">{{ form.username.label_tag }}</label>
+                <label for="{{ form.username.id_for_label }}" class="form-label">Usuario:</label>
+
                 {{ form.username }}
             </div>
             <div class="mb-3">
-                {{ form.password.label_tag }}
+                <label for="{{ form.password.id_for_label }}" class="form-label">Contraseña:</label>
                 {{ form.password }}
+            
             </div>
             <div class="mb-3 d-flex justify-content-between">
                 <p>¿No tienes una cuenta? <a href="{% url 'registro' %}" class="text-decoration-none">Regístrate</a>.</p>

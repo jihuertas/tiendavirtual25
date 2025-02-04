@@ -1,0 +1,41 @@
+
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+
+<!-- Clientes -->
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Top 10 Clientes</h5>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Número de compras</th>
+                        <th>Total importe compras</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in clientes %}
+                    <tr>
+                        <td> {{cliente.first_name}}</td>
+                        <td> {{cliente.last_name}}</td>
+                        <td> {{cliente.total_compras}}</td>
+                        <td> {{cliente.importe_compras}}€</td>
+
+                        
+                    </tr>
+                    {% empty %}
+                    <p> No hay compras</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

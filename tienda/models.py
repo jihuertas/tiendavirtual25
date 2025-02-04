@@ -57,6 +57,14 @@ class Compra(models.Model):
         verbose_name_plural = "Compras"
         unique_together = ['usuario','producto','fecha']
 
-
+class Promocion(models.Model):
+    nombre = models.CharField(max_length=20)
+    codigo = models.CharField(max_length=10)
+    descuento = models.PositiveIntegerField()
+    fecha_inicio = models.DateField()
+    fecha_fin = models.DateField() 
+    
+    def __str__(self):
+        return self.nombre
 
     

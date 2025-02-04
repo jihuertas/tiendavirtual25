@@ -1,0 +1,19 @@
+
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+<h2>Checkout</h2>
+<p>
+    Se dispone a comprar <b>{{ form.unidades.value }}</b> unidades del producto
+    <b>{{ producto.nombre }} {{ producto.modelo }}</b> por el precio de:
+    <br/><b class="display-6">{{ total|floatformat:2  }} &euro;</b>. Descuento aplicado: {{descuento}}% ({{form.cod_descuento.value}})
+</p>
+<form action="" method="post">
+    {% csrf_token %}
+    <input type="hidden" name="{{ form.unidades.html_name }}" id="{{ form.unidades.id_for_label }}" value="{{ form.unidades.value }}">
+    <input type="hidden" name="{{ form.cod_descuento.html_name }}" id="{{ form.cod_descuento.id_for_label }}" value="{{ form.unidades.value }}">
+    
+    <button type="submit" class="btn btn-danger">Comprar</button>
+    
+</form>
+{% endblock %}

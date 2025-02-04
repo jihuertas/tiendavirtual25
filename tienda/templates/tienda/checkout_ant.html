@@ -1,0 +1,23 @@
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+    {{producto.nombre}}
+
+    <p>Detalles</p>
+    {% if producto.foto %}
+    <img src="{{producto.foto.url}}" alt="" width="300px">
+    {% endif%}
+    <p>-----------------------------------------------</p>
+    Marca: {{producto.marca}}<br>
+    Modelo: {{producto.modelo}}<br>
+    Precio: {{producto.precio}}<br>
+    ¿VIP? {{producto.vip}}<br>
+    <p>----------------------------------------------</p>
+
+
+<form action="" method="post">
+    {% csrf_token %}
+    {{form.as_p}}
+    <input type="submit" value="Comprar">
+</form>
+{% endblock %}

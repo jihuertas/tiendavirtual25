@@ -1,34 +1,134 @@
 {% extends 'tienda/base.html' %}
 
 {% block contenido %}
-    <form method="GET">
-        <label>Introduce un campo para filtrar</label>
-        <input type="text" name="filtro_nombre" placeholder="Buscar por nombre" value = "{{request.GET.filtro_nombre}}"/>
-        <select name="filtro_marca">
-            <option value="">Seleccione una Marca</option>
-            {% for marca in marcas %}
-            <option 
-            {% if request.GET.filtro_marca == marca.nombre %} selected {% endif %}>
-                {{marca.nombre}}
-            </option>
-        {% empty %}
-        <p>No hay marcas a seleccionar</p>
-        {% endfor %}
-        </select>
 
-        <input type="number" name="filtro_precio" placeholder="Precio Máximo" value="{{request.GET.filtro_precio}}">
+    <!-- Filtros -->
+    <div class="container my-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="GET" class="row g-3">
+                    <div class="col-md-3">
+                        <label>Nombre:</label>
+                        <input type="text" name="filtro_nombre" placeholder="Buscar por nombre"
+                            value="{{request.GET.filtro_nombre}}" />
+                    </div>
+                    <div class="col-md-3">
+                        <label>Marca:</label>
+                        <select name="filtro_marca" class="form-select">
+                            <option value="">Seleccione una Marca</option>
+                            {% for marca in marcas %}
+                            <option {% if request.GET.filtro_marca == marca.nombre %} selected {% endif %}>
+                                {{marca.nombre}}
+                            </option>
+                            {% empty %}
+                            <p>No hay marcas a seleccionar</p>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label>Precio:</label>
+                        <input type="number" name="filtro_precio" placeholder="Precio Máximo"
+                            value="{{request.GET.filtro_precio}}">
+                    </div>
+                    <div class="col-md-2">
+                        <input type="submit" class="btn btn-primary w-100" value="Filtrar">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
 
-        <input type="submit" value="Filtrar">
-       
-    </form>
-    <ul>
-        {% for producto in productos %}
-            <li>
-                <a href=  "{% url 'producto_detalle' producto.pk %}" >{{producto.nombre}}</a>
+<!-- Productos -->
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Lista de Productos</h5>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Foto</th>
+                        <th>Nombre</th>
+                        <th>Modelo</th>
+                        <th>Precio</th>
+                        <th>Stock</th>
+                        <th>Marca</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in productos %}
+                    <tr>
+                        <td>{% if producto.foto %}
+                            <img src="{{ producto.foto.url }}" class='img-productos'>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <a href="{% url 'producto_detalle' producto.pk %}">
+                                {{ producto.nombre }}
+                            </a>
+                        </td>
+                        <td>
+                            {{ producto.modelo }}
+                        </td>
+                        <td>
+                            {{ producto.precio }}
+                        </td>
+                        <td>
+                            {{ producto.unidades }}
+                        </td>
+                        <td>
+                            {{ producto.marca }}
+                        </td>
+                        <td>
+                            {% if user.is_staff %}
+                            <a href="{% url 'producto_editar' pk=producto.pk %}" class="btn btn-sm btn-info">Editar</a>
+                            <a href="{% url 'producto_borrar' pk=producto.pk %}"class="btn btn-sm btn-danger" >Borrar</a>
+                            {% else %}
+                            <form action="{% url 'checkout' producto.pk %}" method="get">
+                                {% csrf_token %}
+                                {{ compra_form.as_p }}
+                                <button type="submit" class="btn btn-sm btn-info">Comprar</button>
+                            </form>
+                            {%endif%}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <p> No hay productos</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% if user.is_staff %}
+                <a href="{% url 'producto_crear' %}" class="btn btn-sm btn-info">Crear Producto</a>          
+            {%endif%}
 
+            <!-- Controles de paginación -->
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; Primera</a>
             </li>
-        {% empty %}
-        <p>No hay productos</p>
-        {% endfor %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            </li>
+        {% endif %}
     </ul>
+</nav>
+        </div>
+    </div>
+</div>
+
 {% endblock %}

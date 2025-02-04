@@ -1,0 +1,76 @@
+
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+<h2>Informes</h2>
+
+<!-- Top 10 clientes -->
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Top 10 Clientes</h5>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Apellidos</th>
+                        <th>Número de compras</th>
+                        <th>Total importe compras</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for cliente in top10clientes %}
+                    <tr>
+                        <td> {{cliente.first_name}}</td>
+                        <td> {{cliente.last_name}}</td>
+                        <td> {{cliente.total_compras}}</td>
+                        <td> {{cliente.importe_compras}}€</td>
+
+                        
+                    </tr>
+                    {% empty %}
+                    <p> No hay compras</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<br>
+<!-- Top 10 Productos -->
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Top 10 Productos</h5>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Total ventas</th>
+                        
+                        
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in top10productos %}
+                    <tr>
+                        <td> {{producto.nombre}}</td>
+                        <td> {{producto.marca.nombre}}</td>
+                        <td> {{producto.modelo}}</td>
+                        <td> {{producto.total_vendidos}}</td>
+
+                        
+                    </tr>
+                    {% empty %}
+                    <p> No hay compras</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

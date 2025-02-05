@@ -5,6 +5,8 @@ from django.urls import reverse_lazy
 from .forms import CompraForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
+from django.db.models import Sum, Count
 
 
 # Create your views here.
@@ -105,4 +107,7 @@ class Checkout(LoginRequiredMixin,View):
 
         return redirect('compra_listado')
         
-
+@login_required
+def informes(request):
+    topclients = Usuario.objects.annotate(importe_compras = Sum('compra__importe'), total_compras=Count('compra')).order_by('-importe_compras')[:10]
+    return render(request, 'tienda/informes.html',{'topclients':topclients})

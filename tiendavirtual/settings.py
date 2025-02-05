@@ -140,8 +140,8 @@ MEDIA_URL = 'media/'
 
 
 # Redirigir después de iniciar sesión
-LOGIN_REDIRECT_URL = '/'  # Cambia esto a la URL que desees
+LOGIN_REDIRECT_URL = '/'  
 
 # Redirigir después de cerrar sesión
-LOGOUT_REDIRECT_URL = '/accounts/login/'  # Cambia esto si lo necesitas
+LOGOUT_REDIRECT_URL = '/accounts/login/' 
 

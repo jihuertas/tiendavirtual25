@@ -18,12 +18,16 @@
                     </tr>
                 </thead>
                 <tbody>
+                    {% for client in topclients%}
                     <tr>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
+                        
+                        <td>{{client.username}}</td>
+                        <td>{{client.lastname}}</td>
+                        <td>{{client.total_compras}}</td>
+                        <td>{{client.importe_compras}}</td>
                     </tr>
+                    {% endfor%}
+
                 </tbody>
             </table>
         </div>

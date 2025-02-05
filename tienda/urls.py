@@ -11,5 +11,6 @@ urlpatterns = [
     path('productos/<int:pk>/del', BorrarProducto.as_view(), name='producto_borrar'),
     path('', ComprarProducto.as_view(), name='compra_listado'),
     path('checkout/<int:pk>',Checkout.as_view(),name='checkout'),
+    path('informes',informes,name='informes'),
 
 ]

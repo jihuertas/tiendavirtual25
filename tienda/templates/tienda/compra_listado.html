@@ -79,20 +79,30 @@
                             {{ producto.marca }}
                         </td>
                         <td>
+                            {% if user.is_staff %}
+                            <a href="{% url 'producto_editar' pk=producto.pk %}" class="btn btn-sm btn-info">Editar</a>
+                            <a href="{% url 'producto_borrar' pk=producto.pk %}"class="btn btn-sm btn-danger" >Borrar</a>
+                            
+                            {% else %}
                            
                             <form action="{% url 'checkout' producto.pk %}" method="get">
                                 {% csrf_token %}
                                 {{ compra_form.as_div }}
                                 <button type="submit" class="btn btn-sm btn-info">Comprar</button>
                             </form>
-                            
+                            {% endif%}
                         </td>
+                        
                     </tr>
+
                     {% empty %}
                     <p> No hay productos</p>
                     {% endfor %}
                 </tbody>
             </table>
+            {% if user.is_staff %}
+                <a href="{% url 'crear' %}" class="btn btn-sm btn-info">Crear producto</a>
+            {% endif %}
         </div>
     </div>
 </div>

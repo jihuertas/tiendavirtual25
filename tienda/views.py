@@ -3,6 +3,9 @@ from .models import *
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView,DeleteView
 from django.urls import reverse_lazy
 from .forms import CompraForm
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 
 # Create your views here.
 
@@ -31,7 +34,7 @@ class CrearProductos(CreateView):
     fields = '__all__'
     success_url = reverse_lazy("listado")
 
-class ComprarProducto (ListView):
+class ComprarProducto (LoginRequiredMixin,ListView):
     model = Producto
     template_name = 'tienda/compra_listado.html'
     context_object_name = 'productos'
@@ -66,7 +69,7 @@ class ComprarProducto (ListView):
 
         return query
     
-class Checkout(View):
+class Checkout(LoginRequiredMixin,View):
 
     def get(self, request, pk):
         producto = get_object_or_404(Producto,pk=pk)
@@ -77,19 +80,29 @@ class Checkout(View):
     
     def post(self, request, pk):
         producto = get_object_or_404(Producto,pk=pk)
-        unidades = request.POST.get('unidades')
+        unidades = int(request.POST.get('unidades'))
         usuario = request.user
-        print(usuario)
-        total = int(unidades) * producto.precio
+        total = unidades * producto.precio
+   
+        if usuario.saldo >= total:
+            
+            if unidades <= producto.unidades:
+                Compra.objects.create(usuario=usuario,unidades=int(unidades),producto=producto,importe= total)
+                usuario.saldo -= total
+                usuario.save()
+                producto.unidades -= unidades
+                producto.save()
+                messages.success(request, "Compra realizada correctamente")
 
-        #compra = Compra(usuario=usuario,unidades=int(unidades),producto=producto,'importe':total})
-        compra = Compra()
-        compra.producto = producto
-        compra.usuario = usuario
-        compra.unidades = int(unidades)
-        compra.importe = int(unidades) * producto.precio
-        compra.save()
+            else:
+                messages.error(request, "No existen sucientes unidades en stock")
+    
+        else:
+            messages.error(request, 'No tienes suficiente saldo')
+
+        return redirect('compra_listado')
 
 
         return redirect('compra_listado')
         
+

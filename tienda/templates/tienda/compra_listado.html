@@ -24,10 +24,11 @@
     <ul>
         {% for producto in productos %}
             <li>
-                <a href=  "{% url 'crear_compra' producto.pk %}" >{{producto.nombre}}</a>
-                <form action="" method="get">
+                <a href=  "{% url 'checkout' producto.pk %}" >{{producto.nombre}}</a>
+                <form action="{% url 'checkout' producto.pk %}" method="get">
                     {% csrf_token %}
                     {{ compra_form}}
+                    
                     <input type="submit" value="Comprar">
 
                 </form>

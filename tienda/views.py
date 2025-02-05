@@ -1,4 +1,4 @@
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from .models import *
 from django.views.generic import View, ListView, DetailView, CreateView, UpdateView,DeleteView
 from django.urls import reverse_lazy
@@ -53,8 +53,6 @@ class ComprarProducto (ListView):
         filtro_marca = self.request.GET.get("filtro_marca")
         filtro_precio_max = self.request.GET.get("filtro_precio")
 
-        print(filtro_nombre)
-
         if filtro_nombre :
             query = query.filter(nombre__icontains = filtro_nombre)
         
@@ -69,21 +67,29 @@ class ComprarProducto (ListView):
         return query
     
 class Checkout(View):
-# seguir aquí
 
-
-
-class CrearCompra(CreateView):
-    model = Compra
-    template_name = 'tienda/compra_crear.html'
-    fields = ['unidades', 'usuario', 'importe', 'producto']
-    success_url = reverse_lazy('compra_listado')
-
-    def form_valid(self, form):
-        producto = get_object_or_404(Producto, pk=self.kwargs['pk'])
-        importe = 10
-        form.instance.producto = producto
-
-        print (producto)
-        return super().form_valid(form)
+    def get(self, request, pk):
+        producto = get_object_or_404(Producto,pk=pk)
+        unidades = request.GET.get('unidades')
+        total = int(unidades) * producto.precio
+        #form = CompraForm({'unidades':unidades})
+        return render(request, 'tienda/checkout.html',{'producto': producto,'unidades':unidades,'total':total})
     
+    def post(self, request, pk):
+        producto = get_object_or_404(Producto,pk=pk)
+        unidades = request.POST.get('unidades')
+        usuario = request.user
+        print(usuario)
+        total = int(unidades) * producto.precio
+
+        #compra = Compra(usuario=usuario,unidades=int(unidades),producto=producto,'importe':total})
+        compra = Compra()
+        compra.producto = producto
+        compra.usuario = usuario
+        compra.unidades = int(unidades)
+        compra.importe = int(unidades) * producto.precio
+        compra.save()
+
+
+        return redirect('compra_listado')
+        

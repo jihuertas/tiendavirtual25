@@ -1,0 +1,10 @@
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+    <p>¿Desea comprar {{unidades}} {{producto.nombre}} por un total de {{total}}€ ({{producto.precio}} cada una)?</p>
+    <form action="" method="post">
+        {%csrf_token%}
+        <input type="hidden" name="unidades" id="unidades" value="{{unidades}}">
+        <button type="submit">Comprar</button>
+    </form>
+{% endblock %}

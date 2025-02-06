@@ -6,6 +6,7 @@ from .forms import CompraForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum, Count
 
 
@@ -40,6 +41,7 @@ class ComprarProducto (LoginRequiredMixin,ListView):
     model = Producto
     template_name = 'tienda/compra_listado.html'
     context_object_name = 'productos'
+    paginate_by=2
     
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
@@ -107,7 +109,20 @@ class Checkout(LoginRequiredMixin,View):
 
         return redirect('compra_listado')
         
-@login_required
+@staff_member_required
 def informes(request):
+    
     topclients = Usuario.objects.annotate(importe_compras = Sum('compra__importe'), total_compras=Count('compra')).order_by('-importe_compras')[:10]
-    return render(request, 'tienda/informes.html',{'topclients':topclients})
+    topProductos = Producto.objects.annotate(total_vendidos = Sum('compra__unidades')).order_by('-total_vendidos')[:10]
+    return render(request, 'tienda/informes.html',{'topclients':topclients, 'topProductos':topProductos})
+
+
+class PerfilView(LoginRequiredMixin, ListView):
+    model = Compra
+    paginate_by= 4
+    template_name='tienda/perfil.html'
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(usuario = self.request.user)
+        return query

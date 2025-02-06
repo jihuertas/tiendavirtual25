@@ -20,7 +20,7 @@
                             <img src="https://picsum.photos/50/50" class="rounded-circle" alt="User"> {{user.username}}
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="#">Perfil</a></li>
+                            <li><a class="dropdown-item" href="{% url 'perfil' %}">Perfil</a></li>
                             {% if user.is_staff %}
                             <li><a href="{% url 'informes' %}"class="dropdown-item" >Informes</a> </li>       
                             {%endif%}

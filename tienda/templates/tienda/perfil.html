@@ -1,0 +1,77 @@
+{% extends 'tienda/base.html' %}
+
+{% block contenido %}
+
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">{{user.last_name}}, {{user.first_name}}</h5>
+            <p>Saldo: {{user.saldo}}</p>
+        </div>
+    </div>
+</div>
+<!-- Compras -->
+<div class="container">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h5 class="card-title">Tus compras</h5>
+            <table class="table table-hover">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Unidades</th>
+                        <th>Importe</th>
+                        <th>Iva</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for compra in object_list %}
+                    <tr>
+                        <td>{{compra.fecha}}</td>
+                        <td>{{compra.producto.nombre}}</td>
+                        <td>{{compra.unidades}}</td>
+                        <td>{{compra.importe}}</td>
+                        <td>{{compra.iva}}</td>
+                        
+                    </tr>
+
+                    {% empty %}
+                    <p> No hay compras</p>
+                    {% endfor %}
+                </tbody>
+            </table>
+           
+            
+             <!-- Controles de paginación -->
+<nav class="mt-4">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1">&laquo; Primera</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+            </li>
+        {% endif %}
+
+        <li class="page-item active">
+            <span class="page-link">Página {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span>
+        </li>
+
+        {% if page_obj.has_next %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+            </li>
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Última &raquo;</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}

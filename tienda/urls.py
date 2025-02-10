@@ -14,6 +14,7 @@ urlpatterns = [
     path('checkout/<int:pk>', CheckoutView.as_view(), name='checkout'),
 
     path('informes', informes, name='informes'),
+    path('perfil', perfil.as_view(), name='perfil'),
     
 
     path('registro/', RegistroView.as_view(), name='registro'),

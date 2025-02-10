@@ -1,4 +1,5 @@
 from decimal import Decimal
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from .models import *
 from django.views.generic import ListView, DetailView, CreateView, UpdateView,DeleteView, View
@@ -9,6 +10,7 @@ from django.shortcuts import get_object_or_404, redirect
 from django.contrib import messages 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.decorators import login_required
+from django.contrib.admin.views.decorators import staff_member_required
 from django.db.models import Sum, Count
 from django.contrib.auth.views import LoginView
 
@@ -131,8 +133,21 @@ class CustomLoginView(LoginView):
     authentication_form = CustomLoginForm
     template_name = 'registration/login.html'
     
-@login_required
+@staff_member_required
 def informes(request):
     top10clientes = Usuario.objects.annotate(importe_compras = Sum('compra__importe'), total_compras = Count('compra')).order_by('-importe_compras')[:10]
     top10productos = Producto.objects.annotate(total_vendidos = Sum('compra__unidades')).order_by('-total_vendidos')[:10]
     return render(request, 'tienda/informes.html', {'top10clientes':top10clientes,'top10productos':top10productos})
+
+class perfil(LoginRequiredMixin,ListView):
+    model = Compra
+    template_name = 'tienda/perfil.html'
+    context_object_name = 'compras'
+    ordering = '-fecha'
+    paginate_by = 3
+
+    def get_queryset(self):
+        query = super().get_queryset()
+        query = query.filter(usuario=self.request.user)
+        return query
+    

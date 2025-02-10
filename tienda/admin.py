@@ -7,12 +7,12 @@ class CustomUserAdmin(UserAdmin):
     model = Usuario
      # Agregar los nuevos campos a fieldsets (para edición de usuario)
     fieldsets = UserAdmin.fieldsets + (
-        (None, {'fields': ('vip','saldo')}),  # Agrega solo los nuevos campos
+        (None, {'fields': ('foto','vip','saldo')}),  # Agrega solo los nuevos campos
     )
 
     # Agregar los nuevos campos a add_fieldsets (para crear usuario)
     add_fieldsets = UserAdmin.add_fieldsets + (
-        (None, {'fields': ('vip','saldo')}),
+        (None, {'fields': ('foto','vip','saldo')}),
     )
 
 admin.site.register(Producto)
